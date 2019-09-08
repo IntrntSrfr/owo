@@ -1,6 +1,6 @@
 package owo
 
-type OWOResult struct {
+type Result struct {
 	Success     bool   `json:"success"`
 	ErrorCode   int    `json:"errorcode"`
 	Description string `json:"description"`

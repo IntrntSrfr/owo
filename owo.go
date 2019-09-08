@@ -11,19 +11,19 @@ import (
 	"net/textproto"
 )
 
-type OWOClient struct {
+type Client struct {
 	token  string
 	client *http.Client
 }
 
-func NewOWOClient(tkn string) *OWOClient {
-	return &OWOClient{
+func NewClient(tkn string) *Client {
+	return &Client{
 		token:  tkn,
 		client: &http.Client{},
 	}
 }
 
-func (o *OWOClient) Upload(text string) (string, error) {
+func (o *Client) Upload(text string) (string, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -63,18 +63,18 @@ func (o *OWOClient) Upload(text string) (string, error) {
 		return "", err
 	}
 
-	jeff := OWOResult{}
-	err = json.Unmarshal(resbody, &jeff)
+	result := Result{}
+	err = json.Unmarshal(resbody, &result)
 	if err != nil {
 		return "", err
 	}
 
-	if !jeff.Success {
-		return "", errors.New(jeff.Description)
+	if !result.Success {
+		return "", errors.New(result.Description)
 	}
 
-	if len(jeff.Files) > 0 {
-		return "https://chito.ge/" + jeff.Files[0].URL, nil
+	if len(result.Files) > 0 {
+		return "https://chito.ge/" + result.Files[0].URL, nil
 	}
 	return "", nil
 }
